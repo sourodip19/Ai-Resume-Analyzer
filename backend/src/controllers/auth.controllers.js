@@ -1,6 +1,11 @@
 import userModel from "../models/user.models.js";
 import jwt from "jsonwebtoken";
 import blackListedToken from "../models/blackListedToken.models.js";
+import {
+  sendloginEmail,
+  sendlogoutEmail,
+  sendSignupEmail,
+} from "../services/email.services.js";
 export const signUp = async (req, res, next) => {
   try {
     const { username, email, password } = req.body;
@@ -12,13 +17,13 @@ export const signUp = async (req, res, next) => {
     const isUserExist = await userModel.findOne({
       $or: [{ email: email }, { username: username }],
     });
-    if (existingUser) {
+    if (isUserExist) {
       if (isUserExist.username == username) {
         const err = new Error("username is taken ");
         err.statusCode = 400;
         throw err;
       }
-      if (existingUser.email === email) {
+      if (isUserExist.email === email) {
         const err = new Error("email is already present");
         err.statusCode = 400;
         throw err;
@@ -32,6 +37,8 @@ export const signUp = async (req, res, next) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
+    res.cookie("token", token);
+    await sendSignupEmail(username, email);
     res.status(201).json({
       success: true,
       message: "User signUp successful",
@@ -57,7 +64,7 @@ export const login = async (req, res, next) => {
       err.statusCode = 404;
       throw err;
     }
-    const isMatch = userModel.comparePassword(password);
+    const isMatch = user.comparePassword(password);
     if (!isMatch) {
       const err = new Error("Password doesnot match");
       err.statusCode = 400;
@@ -66,6 +73,8 @@ export const login = async (req, res, next) => {
     const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, {
       expiresIn: "1d",
     });
+    res.cookie("token", token);
+    await sendloginEmail(email, user.username);
     res.status(201).json({
       success: true,
       message: "User login successful",
@@ -86,11 +95,17 @@ export const logout = async (req, res, next) => {
       throw error;
     }
     const decoded = jwt.decode(token);
+    const user = await userModel.findById(decoded.userId);
     const blackListToken = await blackListedToken.create({
-      blackListtoken: token,
+      blackListToken: token,
       expiresAt: new Date(decoded.exp * 1000),
     });
     res.clearCookie("token");
+    res.status(200).json({
+      success: true,
+      message: "Logged out successfully",
+    });
+    await sendlogoutEmail(user.username, user.email);
   } catch (error) {
     next(error);
   }
