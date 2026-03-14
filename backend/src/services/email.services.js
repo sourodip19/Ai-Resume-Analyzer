@@ -10,7 +10,7 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-console.log(process.env.EMAIL_USER, process.env.EMAIL_PASS);
+
 export const sendMail = async ({ to, subject, html }) => {
   await transporter.sendMail({
     from: `"Ai-Resume-Analyzer"<${process.env.EMAIL_USER}>`,
