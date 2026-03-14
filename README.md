@@ -1,4 +1,4 @@
-# 🚀 GenAI Job Preparation Platform
+# 🚀 Ai-Resume-Analyzer
 
 A **Production-Ready Full Stack GenAI Web Application** that helps users prepare for job interviews by analyzing resumes, detecting skill gaps, and generating AI-powered interview questions.
 
