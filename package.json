@@ -1,0 +1,33 @@
+{
+  "name": "ai-resume-analyzer",
+  "version": "1.0.0",
+  "description": "Ai-Resume-Analyzer",
+  "keywords": [
+    "Gen-Ai"
+  ],
+  "homepage": "https://github.com/sourodip19/Ai-Resume-Analyzer#readme",
+  "bugs": {
+    "url": "https://github.com/sourodip19/Ai-Resume-Analyzer/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sourodip19/Ai-Resume-Analyzer.git"
+  },
+  "license": "ISC",
+  "author": "Sourodip Dey",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "jsonwebtoken": "^9.0.3",
+    "mongoose": "^9.3.0",
+    "nodemailer": "^8.0.2"
+  }
+}
