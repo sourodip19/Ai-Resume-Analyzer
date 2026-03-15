@@ -1,7 +1,7 @@
 import axios from "axios";
 const api = axios.create({
-  baseUrl: process.env.BACKEND_URL,
-  withCredential: true,
+  baseURL: process.env.BACKEND_URL,
+  withCredentials: true,
 });
 
 export async function signUp(username, email, password) {
@@ -31,7 +31,7 @@ export async function login(email, password) {
 
 export async function logout() {
   try {
-    const reponse = await api.post("api/user/auth/logout");
+    const response = await api.post("api/user/auth/logout");
     return response.data;
   } catch (error) {
     console.log(error);
