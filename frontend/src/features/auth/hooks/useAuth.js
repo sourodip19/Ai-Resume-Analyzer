@@ -1,48 +1,35 @@
-import axios from "axios";
-const api = axios.create({
-  baseURL: process.env.BACKEND_URL,
-  withCredentials: true,
-});
+import React from "react";
+import { useContext } from "react";
+import { AuthContext } from "../auth.context.js";
+import { signUp, login, logout, getMe } from "../services/auth.api.js";
+import { set } from "mongoose";
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  const { user, setUser, loading, setLoading } = context;
 
-export async function signUp(username, email, password) {
-  try {
-    const response = await api.post("api/user/auth/signup", {
-      username,
-      email,
-      password,
-    });
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export async function login(email, password) {
-  try {
-    const response = await api.post("api/user/auth/login", {
-      email,
-      password,
-    });
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export async function logout() {
-  try {
-    const response = await api.post("api/user/auth/logout");
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
-
-export async function getMe() {
-  try {
-    const response = await api.get("api/user/auth/getMe");
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-}
+  const handleLogin = async ({ email, password }) => {
+    setLoading(true);
+    const data = await login({ email, password });
+    setUser(data.user);
+    setLoading(false);
+  };
+  const handleSignUp = async ({ email, password, username }) => {
+    setLoading(true);
+    const data = await signUp({ email, password, username });
+    setUser(data.user);
+    setLoading(false);
+  };
+  const handleLogOut = async () => {
+    setLoading(true);
+    const data = await logout();
+    setUser(null);
+    setLoading(false);
+  };
+  const handleGetMe = async () => {
+    setLoading(true);
+    const data = await getMe();
+    setUser(data.user);
+    setLoading(false);
+  };
+  return { user, loading, handleSignUp, handleLogin, handleLogOut };
+};
