@@ -1,12 +1,12 @@
 import axios from "axios";
 const api = axios.create({
-  baseURL: process.env.BACKEND_URL,
+  baseURL: import.meta.env.VITE_BACKEND_URL,
   withCredentials: true,
 });
 
 export async function signUp({ username, email, password }) {
   try {
-    const response = await api.post("/api/user/auth", {
+    const response = await api.post("/user/auth/signup", {
       username,
       email,
       password,
@@ -19,7 +19,7 @@ export async function signUp({ username, email, password }) {
 
 export async function login({ email, password }) {
   try {
-    const response = await api.post("/api/user/auth", { email, password });
+    const response = await api.post("/user/auth/login", { email, password });
     return response.data;
   } catch (error) {
     console.log(error);
@@ -28,7 +28,7 @@ export async function login({ email, password }) {
 
 export async function logout() {
   try {
-    const response = await api.post("/api/user/auth");
+    const response = await api.post("/user/auth/logout");
     return response.data;
   } catch (error) {
     console.log(error);
