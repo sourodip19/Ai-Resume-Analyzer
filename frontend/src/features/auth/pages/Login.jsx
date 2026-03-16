@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import "../auth.form.scss";
 import "../../../style/button.scss";
 import { useNavigate, Link } from "react-router";
